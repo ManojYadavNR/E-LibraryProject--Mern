@@ -1,27 +1,21 @@
 {
   "compilerOptions": {
-    // Directories
     "rootDir": "./src",
     "outDir": "./dist",
-
-    // Node ESM Settings
     "module": "NodeNext",
     "moduleResolution": "NodeNext",
     "target": "ES2022",
-
-    // TypeScript strictness
     "strict": true,
     "skipLibCheck": true,
-
-    // Helpful compiler options
     "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,
     "sourceMap": true,
     "declaration": true,
-
-    // Optional (recommended)
+    "emitDeclarationOnly": false,
+    "noEmit": false,
     "noUncheckedIndexedAccess": true,
-    "exactOptionalPropertyTypes": true
+    "exactOptionalPropertyTypes": true,
+    "allowImportingTsExtensions": true
   },
   "include": ["src"]
 }
