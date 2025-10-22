@@ -3,8 +3,9 @@ import { BookCreate } from "./BookController.ts";
 import multer from "multer";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
+import authMiddleware from "../middleware/authentication.ts";
 
-// ✅ recreate __dirname for ESM
+
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
@@ -16,7 +17,7 @@ const upload = multer({
 });
 
 BookRouter.post(
-  "/create",
+  "/create",authMiddleware,
   upload.fields([
     { name: "cover", maxCount: 1 },
     { name: "file", maxCount: 1 },
