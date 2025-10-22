@@ -4,6 +4,7 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 import BookModel from "./BookModel.ts";
 import fs from "node:fs";
+import type{ AuthRequest } from "../middleware/authentication.ts";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -49,10 +50,10 @@ const BookCreate = async (req: Request, res: Response, next: NextFunction) => {
       folder: "Book-pdfs",
       format: "pdf",
     });
-
+    const _req= req as AuthRequest
    const newBook = await BookModel.create({
     title,
-    author:'68f8600c522690de0ab2ed7f',
+    author:_req.userId,
     genre,
     cover:uploadBookCover.secure_url,
     file:uploadBookFile.secure_url
