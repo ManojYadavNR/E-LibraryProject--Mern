@@ -157,7 +157,7 @@ const BookList =async (req: Request, res: Response, next: NextFunction) => {
     } catch (error) {
         return next(createHttpError(500,"error while fetching books"))
     }
-    res.json({message:"your books"})
+   return res.json({message:"your books"})
 }
 const Book=async (req: Request, res: Response, next: NextFunction) => {
     const id = req.params.id
@@ -166,11 +166,40 @@ const Book=async (req: Request, res: Response, next: NextFunction) => {
          if(!book){
             return next(createHttpError(404,"Book not found"))
          }
-    res.json({Message:"your book",book:book})
+   return  res.json({Message:"your book",book:book})
         
     } catch (error) {
         return next(createHttpError(500,"error while fetching the book"))
     }
    
 }
-export { BookCreate ,BookUpdate,BookList,Book};
+const BookDelete=async (req: Request, res: Response, next: NextFunction) => {
+
+    const id = req.params.id;
+
+    const book = await BookModel.findOne({_id:id})
+
+    if(!book){
+        return next(createHttpError(404,"Book not Found"))
+    }
+   
+
+     const _req = req as AuthRequest;
+    if (book.author.toString() !== _req.userId) {
+      return next(createHttpError(401, "You cannot update other books"));
+    }
+    const coverfilesplit= book.cover.split("/")
+    const coverpublicId= coverfilesplit.at(-2) +"/"+ (coverfilesplit.at(-1)?.split(".").at(-2))
+    console.log("publicid",coverpublicId)
+
+    const Filefilesplit= book.file.split("/")
+    const filepublicId= Filefilesplit.at(-2) +"/"+ Filefilesplit.at(-1)
+    
+    await cloudinary.uploader.destroy(coverpublicId)
+    await cloudinary.uploader.destroy(filepublicId,{
+        resource_type:"raw"
+    })
+   await BookModel.deleteOne({_id:id})
+     return res.status(204).json({message:"Book deleted Successfully",id:id})
+}
+export { BookCreate ,BookUpdate,BookList,Book,BookDelete};

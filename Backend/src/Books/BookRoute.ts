@@ -1,5 +1,5 @@
 import express from "express";
-import { Book, BookCreate, BookList, BookUpdate } from "./BookController.ts";
+import { Book, BookCreate, BookDelete, BookList, BookUpdate } from "./BookController.ts";
 import multer from "multer";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
@@ -33,4 +33,5 @@ BookRouter.patch(
   ]),
   BookUpdate
 );
+BookRouter.delete("/:id",authMiddleware,BookDelete)
 export default BookRouter;
