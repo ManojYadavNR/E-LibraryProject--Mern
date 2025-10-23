@@ -150,10 +150,27 @@ const BookUpdate = async (req: Request, res: Response, next: NextFunction) => {
 const BookList =async (req: Request, res: Response, next: NextFunction) => {
     try {
         const books= await BookModel.find()
+        if(!books){
+            return next(createHttpError(404,"No books yet"))
+        }
          res.json({message:"your books",books:books})
     } catch (error) {
-        return(createHttpError(500,"error while fetching books"))
+        return next(createHttpError(500,"error while fetching books"))
     }
     res.json({message:"your books"})
 }
-export { BookCreate ,BookUpdate,BookList};
+const Book=async (req: Request, res: Response, next: NextFunction) => {
+    const id = req.params.id
+    try {
+         const book = await BookModel.findOne({_id:id})
+         if(!book){
+            return next(createHttpError(404,"Book not found"))
+         }
+    res.json({Message:"your book",book:book})
+        
+    } catch (error) {
+        return next(createHttpError(500,"error while fetching the book"))
+    }
+   
+}
+export { BookCreate ,BookUpdate,BookList,Book};

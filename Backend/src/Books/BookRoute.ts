@@ -1,5 +1,5 @@
 import express from "express";
-import { BookCreate, BookList, BookUpdate } from "./BookController.ts";
+import { Book, BookCreate, BookList, BookUpdate } from "./BookController.ts";
 import multer from "multer";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
@@ -16,6 +16,7 @@ const upload = multer({
   limits: { fieldSize: 3e7 },
 });
 BookRouter.get('/',BookList)
+BookRouter.get('/:id',Book)
 BookRouter.post(
   "/create",authMiddleware,
   upload.fields([
