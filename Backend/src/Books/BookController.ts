@@ -5,6 +5,7 @@ import { fileURLToPath } from "node:url";
 import BookModel from "./BookModel.ts";
 import fs from "node:fs";
 import type{ AuthRequest } from "../middleware/authentication.ts";
+import createHttpError from "http-errors";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -73,5 +74,78 @@ const BookCreate = async (req: Request, res: Response, next: NextFunction) => {
     next(err);
   }
 };
+const BookUpdate = async (req: Request, res: Response, next: NextFunction) => {
+  const { title, genre } = req.body;
+  const id = req.params.id;
 
-export { BookCreate };
+  try {
+    const book = await BookModel.findById(id);
+    if (!book) return next(createHttpError(404, "Book not found"));
+
+    const _req = req as AuthRequest;
+    if (book.author.toString() !== _req.userId) {
+      return next(createHttpError(401, "You cannot update other books"));
+    }
+
+    const files = req.files as { [fieldname: string]: Express.Multer.File[] };
+
+    let completeCover = "";
+    if (files?.cover?.[0]) {
+      const filename = files.cover[0].filename;
+      const coverMimeType = files.cover[0].mimetype.split("/").at(-1);
+      const filepath = path.resolve(__dirname, "../../public/data/uploads", filename);
+
+      const uploadBookCover = await cloudinary.uploader.upload(filepath, {
+        filename_override: filename,
+        folder: "Book-cover",
+        format: coverMimeType,
+      });
+
+      completeCover = uploadBookCover.secure_url;
+
+      try {
+        await fs.promises.unlink(filepath);
+      } catch (err) {
+        console.warn("Failed to delete cover file:", err.message);
+      }
+    }
+
+    let completeFile = "";
+    if (files?.file?.[0]) {
+      const filename = files.file[0].filename;
+      const bookFilePath = path.resolve(__dirname, "../../public/data/uploads", filename);
+
+      const uploadBookFile = await cloudinary.uploader.upload(bookFilePath, {
+        resource_type: "raw",
+        filename_override: filename,
+        folder: "Book-pdfs",
+        format: "pdf",
+      });
+
+      completeFile = uploadBookFile.secure_url;
+
+      try {
+        await fs.promises.unlink(bookFilePath);
+      } catch (err) {
+        console.warn("Failed to delete book file:", err.message);
+      }
+    }
+
+    const updatedBook = await BookModel.findByIdAndUpdate(
+      id,
+      {
+        title,
+        genre,
+        cover: completeCover || book.cover,
+        file: completeFile || book.file,
+      },
+      { new: true }
+    );
+
+    res.json(updatedBook);
+  } catch (err) {
+    next(err);
+  }
+};
+
+export { BookCreate ,BookUpdate};
