@@ -1,21 +1,51 @@
+// {
+//   "compilerOptions": {
+//     "rootDir": "./src",
+//     "outDir": "./dist",
+//     "module": "NodeNext",
+//     "moduleResolution": "NodeNext",
+//     "target": "ES2022",
+//     "strict": true,
+//     "skipLibCheck": true,
+//     "esModuleInterop": true,
+//     "allowSyntheticDefaultImports": true,
+//     "sourceMap": true,
+//     "declaration": true,
+//     "emitDeclarationOnly": false,
+//     "noEmit": false,
+//     "noUncheckedIndexedAccess": true,
+//     "exactOptionalPropertyTypes": true,
+//     "allowImportingTsExtensions": true
+//   },
+//   "include": ["src"]
+// }
 {
   "compilerOptions": {
+    
     "rootDir": "./src",
     "outDir": "./dist",
+
+   
     "module": "NodeNext",
     "moduleResolution": "NodeNext",
     "target": "ES2022",
+
+    
     "strict": true,
     "skipLibCheck": true,
-    "esModuleInterop": true,
-    "allowSyntheticDefaultImports": true,
-    "sourceMap": true,
-    "declaration": true,
-    "emitDeclarationOnly": false,
-    "noEmit": false,
     "noUncheckedIndexedAccess": true,
     "exactOptionalPropertyTypes": true,
-    "allowImportingTsExtensions": true
+
+   
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
+
+    
+    "sourceMap": true,
+    "declaration": true,
+    "noEmit": false,
+    "emitDeclarationOnly": false
   },
-  "include": ["src"]
+  "include": ["src"],
+  "exclude": ["node_modules"]
 }
