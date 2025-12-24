@@ -1,4 +1,5 @@
 import { Button } from "@/components/ui/button"
+import { Link } from "react-router-dom"
 import {
   Card,
   CardAction,
@@ -23,7 +24,7 @@ const Login = () => {
           Enter your email below to login to your account
         </CardDescription>
         <CardAction>
-          <Button variant="link">Sign Up</Button>
+          <Button variant="link"><Link to={"/register"}>Sign up</Link></Button>
         </CardAction>
       </CardHeader>
       <CardContent>
