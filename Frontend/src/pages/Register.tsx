@@ -67,7 +67,7 @@ const Register = () => {
                   Sign up with Google
                 </Button>
                 <FieldDescription className="px-6 text-center">
-                  Already have an account? <Link to={"/login"}>SignIn</Link>
+                  Already have an account? <Link to={"/auth/login"}>SignIn</Link>
                 </FieldDescription>
               </Field>
             </FieldGroup>

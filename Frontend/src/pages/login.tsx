@@ -1,5 +1,5 @@
 import { Button } from "@/components/ui/button"
-import { Link } from "react-router-dom"
+import { Link, useNavigate } from "react-router-dom"
 import {
   Card,
   CardAction,
@@ -11,9 +11,39 @@ import {
 } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
+import { useRef } from "react"
+import { useMutation } from "@tanstack/react-query"
+import { login } from "@/http/api"
 
 
 const Login = () => {
+ const navigate= useNavigate()
+
+  const emailref = useRef<HTMLInputElement>(null)
+  const passwordref= useRef<HTMLInputElement>(null)
+
+
+    const mutation = useMutation({
+    mutationFn: login,
+    onSuccess: () => {
+     console.log("login successfully")
+     navigate("/dashboard/home")
+
+
+    },
+  })
+
+
+  const handlelogin=()=>{
+    const email= emailref.current?.value
+    const password= passwordref.current?.value
+     
+
+    if(!email||!password){
+      return alert("password or email required")
+    }
+    mutation.mutate({email,password})
+  }
   return (
    
   <section className="flex justify-center items-center h-screen">
@@ -24,7 +54,7 @@ const Login = () => {
           Enter your email below to login to your account
         </CardDescription>
         <CardAction>
-          <Button variant="link"><Link to={"/register"}>Sign up</Link></Button>
+          <Button variant="link"><Link to={"/auth/register"}>Sign up</Link></Button>
         </CardAction>
       </CardHeader>
       <CardContent>
@@ -35,6 +65,7 @@ const Login = () => {
               <Input
                 id="email"
                 type="email"
+                ref={emailref}
                 placeholder="m@example.com"
                 required
               />
@@ -49,13 +80,13 @@ const Login = () => {
                   Forgot your password?
                 </a>
               </div>
-              <Input id="password" type="password" required />
+              <Input id="password" ref={passwordref} type="password" required />
             </div>
           </div>
         </form>
       </CardContent>
       <CardFooter className="flex-col gap-2">
-        <Button type="submit" className="w-full">
+        <Button onClick={handlelogin} type="submit" className="w-full">
           Login
         </Button>
         <Button variant="outline" className="w-full">

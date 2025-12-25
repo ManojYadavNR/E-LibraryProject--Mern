@@ -2,8 +2,15 @@ import express from "express";
 import  globalerrorhandler from "./middleware/globalerrorhandler.ts";
 import  userRouter from "./users/userRoute.ts";
 import  BookRouter from "./Books/BookRoute.ts";
+import { config } from './config/config.ts';
+import cors from "cors";
 
 const app=express()
+
+
+app.use(cors({
+    origin:config.Frontend_Url
+}))
 app.use(express.json())
 
 
