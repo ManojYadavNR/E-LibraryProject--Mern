@@ -52,8 +52,8 @@ const Login = () => {
       <CardHeader>
         <CardTitle>Login to your account</CardTitle>
         <CardDescription>
-          Enter your email below to login to your account
-          
+          Enter your email below to login to your account ,<br />
+          {mutation.isError && <span className="tex-red-500 text-sm">{mutation.error.message}</span>}
         </CardDescription>
         <CardAction>
           <Button variant="link"><Link to={"/auth/register"}>Sign up</Link></Button>
