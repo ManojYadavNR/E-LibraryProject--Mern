@@ -3,13 +3,13 @@ import Register from "@/pages/Register";
 import  Login from "@/pages/login";
 // import HomePage from "@/pages/HomePage";
 import HomePage from "./pages/HomePage";
-
-import  Layout from "./pages/layout";
+import AuthLayout from "./layouts/authLayout";
+import  Layout from "./layouts/layout";
 import  Books from "./pages/Books";
 export const router = createBrowserRouter([
   {
-      path: "/",
-    element: <Layout/>, // Sidebar + Outlet
+      path: "/dashboard",
+    element: <Layout/>, 
     children: [
       { path: "home", element: <HomePage /> }, 
       {
@@ -19,14 +19,19 @@ export const router = createBrowserRouter([
       
     ]},
        {
-    path: "login",
+       path: "/auth",
+    element:<AuthLayout/>,
+    children:[{
+          path: "login",
     element:<Login/>,
+    }, {
+    path: "register",
+    element:<Register/>,
+  }]
+    
   },
   
-   {
-    path: "/register",
-    element:<Register/>,
-  },
+  
     {
     path: "/re",
     element:<Layout/>,
