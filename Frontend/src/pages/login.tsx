@@ -15,10 +15,13 @@ import { useRef } from "react"
 import { useMutation } from "@tanstack/react-query"
 import { login } from "@/http/api"
 import { LoaderCircle } from "lucide-react"
+import TokenStore from "@/AuthStore"
 
 
 const Login = () => {
  const navigate= useNavigate()
+
+ const setToken = TokenStore((state)=>state.setToken)
 
   const emailref = useRef<HTMLInputElement>(null)
   const passwordref= useRef<HTMLInputElement>(null)
@@ -26,8 +29,9 @@ const Login = () => {
 
     const mutation = useMutation({
     mutationFn: login,
-    onSuccess: () => {
+    onSuccess: (response) => {
      console.log("login successfully")
+     setToken(response.data.accesstoken)
      navigate("/dashboard/home")
 
 
