@@ -14,6 +14,7 @@ import { Label } from "@/components/ui/label"
 import { useRef } from "react"
 import { useMutation } from "@tanstack/react-query"
 import { login } from "@/http/api"
+import { LoaderCircle } from "lucide-react"
 
 
 const Login = () => {
@@ -52,6 +53,7 @@ const Login = () => {
         <CardTitle>Login to your account</CardTitle>
         <CardDescription>
           Enter your email below to login to your account
+          
         </CardDescription>
         <CardAction>
           <Button variant="link"><Link to={"/auth/register"}>Sign up</Link></Button>
@@ -86,8 +88,9 @@ const Login = () => {
         </form>
       </CardContent>
       <CardFooter className="flex-col gap-2">
-        <Button onClick={handlelogin} type="submit" className="w-full">
-          Login
+        <Button onClick={handlelogin} type="submit" className="w-full" disabled={mutation.isPending}>
+          {mutation.isPending && <LoaderCircle className="animate-spin mr-2" />}
+         <span >Login</span> 
         </Button>
         <Button variant="outline" className="w-full">
           Login with Google
