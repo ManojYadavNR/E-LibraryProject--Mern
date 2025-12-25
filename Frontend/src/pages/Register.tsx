@@ -1,10 +1,11 @@
 
 import { Button } from "@/components/ui/button"
-import { Link } from "react-router-dom"
+import { Link, useNavigate } from "react-router-dom"
 import {
   Card,
   CardContent,
   CardDescription,
+  CardFooter,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card"
@@ -15,7 +16,41 @@ import {
   FieldLabel,
 } from "@/components/ui/field"
 import { Input } from "@/components/ui/input"
+import { useRef } from "react"
+import { useMutation } from "@tanstack/react-query"
+import { register } from "@/http/api"
+import { LoaderCircle } from "lucide-react"
 const Register = () => {
+
+  const navigate= useNavigate()
+  const fullnameref= useRef<HTMLInputElement>(null)
+  const emailref = useRef<HTMLInputElement>(null)
+  const passwordref= useRef<HTMLInputElement>(null)
+
+
+    const mutation = useMutation({
+    mutationFn: register,
+    onSuccess: () => {
+     console.log("login successfully")
+     navigate("/dashboard/home")
+
+
+    },
+  })
+
+
+  const handleRegister=()=>{
+    const email= emailref.current?.value
+    const password= passwordref.current?.value
+    const name= fullnameref.current?.value
+     
+
+    if(!email||!password|| !name){
+      return alert("password or email required")
+    }
+    console.log("register successfully")
+    mutation.mutate({name,email,password})
+  }
   return (
  
    <section className="flex justify-center items-center h-screen">
@@ -24,6 +59,7 @@ const Register = () => {
         <CardTitle>Create an account</CardTitle>
         <CardDescription>
           Enter your information below to create your account
+          {mutation.isError && <span className="tex-red-500 text-sm">{mutation.error.message}</span>}
         </CardDescription>
       </CardHeader>
       <CardContent>
@@ -31,13 +67,14 @@ const Register = () => {
           <FieldGroup>
             <Field>
               <FieldLabel htmlFor="name">Full Name</FieldLabel>
-              <Input id="name" type="text" placeholder="John Doe" required />
+              <Input id="name" ref={fullnameref} type="text" placeholder="John Doe" required />
             </Field>
             <Field>
               <FieldLabel htmlFor="email">Email</FieldLabel>
               <Input
                 id="email"
                 type="email"
+                ref={emailref}
                 placeholder="m@example.com"
                 required
               />
@@ -48,21 +85,22 @@ const Register = () => {
             </Field>
             <Field>
               <FieldLabel htmlFor="password">Password</FieldLabel>
-              <Input id="password" type="password" required />
+              <Input id="password" ref={passwordref}  type="password" required />
               <FieldDescription>
                 Must be at least 8 characters long.
               </FieldDescription>
+              
             </Field>
-            <Field>
-              <FieldLabel htmlFor="confirm-password">
-                Confirm Password
-              </FieldLabel>
-              <Input id="confirm-password" type="password" required />
-              <FieldDescription>Please confirm your password.</FieldDescription>
-            </Field>
-            <FieldGroup>
+           
+          </FieldGroup>
+        </form>
+        </CardContent>
+        <CardFooter className="flex-col gap-2">
+        
               <Field>
-                <Button type="submit">Create Account</Button>
+                <Button  onClick={handleRegister} type="button" disabled={mutation.isPending}>
+                            {mutation.isPending && <LoaderCircle className="animate-spin mr-2" />}
+         <span >Create Account</span> </Button>
                 <Button variant="outline" type="button">
                   Sign up with Google
                 </Button>
@@ -70,10 +108,9 @@ const Register = () => {
                   Already have an account? <Link to={"/auth/login"}>SignIn</Link>
                 </FieldDescription>
               </Field>
-            </FieldGroup>
-          </FieldGroup>
-        </form>
-      </CardContent>
+           
+      
+      </CardFooter>
     </Card>
    </section>
 
