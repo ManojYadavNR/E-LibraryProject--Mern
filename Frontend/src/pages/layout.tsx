@@ -24,10 +24,12 @@ export default function Layout() {
       }
     >
       <AppSidebar variant="inset" />
-      
+     
       <SidebarInset>
         <SiteHeader />
        <Outlet/>
+       
+      
       </SidebarInset>
     </SidebarProvider>
   )
