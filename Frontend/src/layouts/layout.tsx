@@ -8,12 +8,17 @@ import {
   SidebarProvider,
 } from "@/components/ui/sidebar"
 
-import { Outlet } from "react-router-dom"
+import { Navigate, Outlet, replace } from "react-router-dom"
+import TokenStore from "@/AuthStore"
 
 // import data from "./data.json"
 
 
 export default function Layout() {
+   const token = TokenStore((state)=>state.token)
+   if(token==""){
+    return <Navigate to={"/auth/login"} replace /> 
+   }
   return (
     <SidebarProvider
       style={
